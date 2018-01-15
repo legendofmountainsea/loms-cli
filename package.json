@@ -1,22 +1,30 @@
 {
-  "name": "legend_of_mountain_sea",
+  "name": "loms-cli",
   "version": "0.0.1",
-  "description": "4X sandbox game with Mountain & Sea Classics",
+  "description": "LOMS Development CLI",
+  "main": "loms-cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TyrealGray/LegendOfMountainSea.git"
+    "url": "git+https://github.com/SkyHarp/loms-cli.git"
   },
   "keywords": [
-    "javascript",
-    "nodejs"
+    "loms",
+    "cli"
   ],
-  "author": "Tyreal Gray",
+  "bin": {
+    "loms": "loms-cli.js"
+  },
+  "author": "TyrealGray",
   "license": "GPL-2.0",
   "bugs": {
-    "url": "https://github.com/TyrealGray/LegendOfMountainSea/issues"
+    "url": "https://github.com/SkyHarp/loms-cli/issues"
   },
-  "homepage": "https://github.com/TyrealGray/LegendOfMountainSea#readme"
+  "homepage": "https://github.com/SkyHarp/loms-cli#readme",
+  "dependencies": {
+    "commander": "^2.13.0",
+    "download": "^6.2.5"
+  }
 }
