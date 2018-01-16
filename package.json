@@ -1,6 +1,6 @@
 {
   "name": "loms-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "LOMS Development CLI",
   "main": "loms-cli.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "cli"
   ],
   "bin": {
-    "loms": "loms-cli.js"
+    "loms": "./loms-cli.js"
   },
   "author": "TyrealGray",
   "license": "GPL-2.0",
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/SkyHarp/loms-cli#readme",
   "dependencies": {
+    "cli-spinner": "^0.2.7",
     "commander": "^2.13.0",
-    "download": "^6.2.5"
+    "git-clone": "^0.1.0"
   }
 }
