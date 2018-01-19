@@ -26,6 +26,7 @@
   "dependencies": {
     "cli-spinner": "^0.2.7",
     "commander": "^2.13.0",
+    "download": "^6.2.5",
     "git-clone": "^0.1.0"
   }
 }
