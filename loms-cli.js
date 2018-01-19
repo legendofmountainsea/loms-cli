@@ -38,13 +38,22 @@ program
 					downloadURL = 'https://dl.nwjs.io/v0.27.0/nwjs-v0.27.0-osx-x64.zip';
 				}
 				
-				download(downloadURL, path.join(process.cwd(), path.join('LegendOfMountainSea','LOMS')),{ extract: true, strip: 1, mode: '666', headers: { accept: 'application/zip' } } ).then(() => {
+				download(downloadURL, path.join(process.cwd(), path.join('LegendOfMountainSea','LOMS')),{ extract: true, headers: { accept: 'application/zip' } } ).then(() => {
 					downloadingStr.stop();
 					console.log(' download finished!');
 					
-					exec('cd LegendOfMountainSea/LOMS && npm i', function(error, stdout, stderr) {
-						console.log('stdout: ' + stdout);
-						console.log('stderr: ' + stderr);
+					const initloadingStr = new Spinner('install project %s');
+					initloadingStr.setSpinnerString(18);
+					initloadingStr.start();
+					
+					exec('cd LegendOfMountainSea/LOMS && npm i && cd ../LOMS-Server && npm i', function(error, npmInitLog, npmError) {
+						initloadingStr.stop();
+						console.log('install finished!');
+						
+						console.log(npmInitLog, npmError);
+						
+						console.log('Project is ready for development!');
+						
 						if (error !== null) {
 							console.log('exec error: ' + error);
 						}
