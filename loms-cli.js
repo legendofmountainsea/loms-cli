@@ -8,7 +8,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('0.0.2')
+	.version('0.0.4')
 	.description('LOMS Development CLI');
 
 program
@@ -24,7 +24,7 @@ program
 			{checkout: 'master'},
 			function () {
 				cloneLoadingStr.stop();
-				console.log('','Clone finished!');
+				console.log(' Clone finished!');
 				
 				const downloadingStr = new Spinner('download nwjs client to local %s');
 				downloadingStr.setSpinnerString(18);
@@ -33,14 +33,14 @@ program
 				let downloadURL = null;
 				
 				if(/^win/.test(process.platform)){
-					downloadURL = 'https://nwjs-v0.27.0-win-x64.zip';
+					downloadURL = 'https://dl.nwjs.io/v0.27.0/nwjs-v0.27.0-win-x64.zip';
 				}else {
-					downloadURL = 'https://nwjs-v0.27.0-osx-x64.zip';
+					downloadURL = 'https://dl.nwjs.io/v0.27.0/nwjs-v0.27.0-osx-x64.zip';
 				}
 				
-				download(downloadURL, path.join(process.cwd(), 'LegendOfMountainSea') ).then(() => {
+				download(downloadURL, path.join(process.cwd(), path.join('LegendOfMountainSea','LOMS')),{ extract: true, strip: 1, mode: '666', headers: { accept: 'application/zip' } } ).then(() => {
 					downloadingStr.stop();
-					console.log('','download finished!');
+					console.log(' download finished!');
 					
 					exec('cd LegendOfMountainSea/LOMS && npm i', function(error, stdout, stderr) {
 						console.log('stdout: ' + stdout);
@@ -49,6 +49,8 @@ program
 							console.log('exec error: ' + error);
 						}
 					});
+				}).catch(error => {
+					console.log('download error: ' + error);
 				});
 				
 			});
