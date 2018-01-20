@@ -8,7 +8,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('0.0.8')
+	.version('1.0.0')
 	.description('LOMS Development CLI');
 
 program
