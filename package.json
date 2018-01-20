@@ -1,6 +1,6 @@
 {
   "name": "loms-cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "LOMS Development CLI",
   "main": "loms-cli.js",
   "scripts": {
