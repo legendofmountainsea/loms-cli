@@ -105,7 +105,7 @@ program
 	.command('run-server')
 	.description('debug game server.')
 	.action(function () {
-		exec('npm run dev', function(error, npmInitLog, npmError) {
+		exec('npm run server', function(error, npmInitLog, npmError) {
 			
 			console.log(npmInitLog, npmError);
 			
