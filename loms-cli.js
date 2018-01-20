@@ -8,7 +8,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('0.0.6')
+	.version('0.0.7')
 	.description('LOMS Development CLI');
 
 program
@@ -63,6 +63,56 @@ program
 				});
 				
 			});
+	});
+
+program
+	.command('run-dev')
+	.description('debug game with web.')
+	.action(function () {
+		exec('npm run dev', function(error, npmInitLog, npmError) {
+			
+			console.log(npmInitLog, npmError);
+			
+			if (error !== null) {
+				console.log('exec error: ' + error);
+			}
+		});
+	});
+
+program
+	.command('run-client')
+	.description('debug game with nwjs client.')
+	.action(function () {
+		let platform = null;
+		
+		if(/^win/.test(process.platform)){
+			platform = 'win';
+		}else {
+			platform = 'mac';
+		}
+		
+		exec('npm run start-'+ platform, function(error, npmInitLog, npmError) {
+			
+			console.log(npmInitLog, npmError);
+			
+			if (error !== null) {
+				console.log('exec error: ' + error);
+			}
+		});
+	});
+
+program
+	.command('run-server')
+	.description('debug game server.')
+	.action(function () {
+		exec('npm run dev', function(error, npmInitLog, npmError) {
+			
+			console.log(npmInitLog, npmError);
+			
+			if (error !== null) {
+				console.log('exec error: ' + error);
+			}
+		});
 	});
 
 program.parse(process.argv);
