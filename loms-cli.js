@@ -7,7 +7,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('1.0.1')
+	.version('1.0.2')
 	.description('LOMS Development CLI');
 
 program
@@ -98,6 +98,36 @@ program
 			if (error !== null) {
 				console.log('exec error: ' + error);
 			}
+		});
+	});
+
+program
+	.command('dist')
+	.description('distribute game.')
+	.action(function () {
+		let platform = null;
+		
+		if(/^win/.test(process.platform)){
+			platform = 'win';
+		}else {
+			platform = 'mac';
+		}
+		
+		const distributingStr = new Spinner('distributing %s');
+		distributingStr.setSpinnerString(18);
+		distributingStr.start();
+		
+		exec('npm run build-'+ platform, function(error, npmInitLog, npmError) {
+			
+			console.log(npmInitLog, npmError);
+			
+			if (error !== null) {
+				console.log('exec error: ' + error);
+				return;
+			}
+			
+			distributingStr.stop();
+			console.log(' distribution finished!');
 		});
 	});
 
