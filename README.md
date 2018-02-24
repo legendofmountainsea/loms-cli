@@ -3,7 +3,6 @@ LOMS Development CLI
 ![icon](https://raw.githubusercontent.com/SkyHarp/LegendOfMountainSea/master/LOMS.png)
 
 ## Installing
-
 ```
 $ npm install loms-cli -g
 ```
@@ -15,14 +14,8 @@ $ loms init
 ```
 $ npm install -g windows-build-tools
 ```
- 
 
-## Getting started LOMS
-
-Navigating to **"./LOMS"** folder
-```
-$ cd ./LOMS
-```
+## Getting started
 **Run game on web browser without NW.js Client**
 ```
 $ loms run-dev
@@ -32,11 +25,8 @@ $ loms run-dev
 $ loms run-client
 ```
 
-## Getting started LOMS-Server
-
-Navigating to **"./LOMS-Server"** folder
+## Getting started Server
 ```
-$ cd ./LOMS-Server
 $ loms run-server
 ```
 

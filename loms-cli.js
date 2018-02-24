@@ -7,7 +7,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('1.0.2')
+	.version('1.1.0')
 	.description('LOMS Development CLI');
 
 program
@@ -26,7 +26,7 @@ program
 			downloadURL = 'https://dl.nwjs.io/v0.27.0/nwjs-v0.27.0-osx-x64.zip';
 		}
 		
-		download(downloadURL, path.join(process.cwd(), 'LOMS'),{ extract: true, headers: { accept: 'application/zip' } } ).then(() => {
+		download(downloadURL, path.join(process.cwd()),{ extract: true, headers: { accept: 'application/zip' } } ).then(() => {
 			downloadingStr.stop();
 			console.log(' download finished!');
 			
@@ -34,7 +34,7 @@ program
 			initloadingStr.setSpinnerString(18);
 			initloadingStr.start();
 			
-			exec('cd ./LOMS && npm i && cd ../LOMS-Server && npm i', function(error, npmInitLog, npmError) {
+			exec('npm i', function(error, npmInitLog, npmError) {
 				initloadingStr.stop();
 				console.log('install finished!');
 				
