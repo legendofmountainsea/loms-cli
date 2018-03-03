@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 
 const program = require('commander');
 const download = require('download');
@@ -7,7 +7,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('1.1.0')
+	.version('1.1.1')
 	.description('LOMS Development CLI');
 
 program
@@ -34,17 +34,20 @@ program
 			initloadingStr.setSpinnerString(18);
 			initloadingStr.start();
 			
-			exec('npm i', function(error, npmInitLog, npmError) {
+			let outputLog = spawn('npm i');
+			
+			outputLog.stdout.on('data', function(data) {
+				console.log(data);
+			});
+			
+			outputLog.stderr.on('data', function(data) {
+				console.log('ERROR: ' + data);
+			});
+			outputLog.on('close', function(code) {
 				initloadingStr.stop();
+				console.log('code: ' + code);
 				console.log('install finished!');
-				
-				console.log(npmInitLog, npmError);
-				
 				console.log('Project is ready for development!');
-				
-				if (error !== null) {
-					console.log('exec error: ' + error);
-				}
 			});
 		}).catch(error => {
 			console.log('download error: ' + error);
@@ -55,13 +58,17 @@ program
 	.command('run-dev')
 	.description('debug game with web.')
 	.action(function () {
-		exec('npm run dev', function(error, npmInitLog, npmError) {
-			
-			console.log(npmInitLog, npmError);
-			
-			if (error !== null) {
-				console.log('exec error: ' + error);
-			}
+		let outputLog = spawn('npm run dev');
+		
+		outputLog.stdout.on('data', function(data) {
+			console.log(data);
+		});
+		
+		outputLog.stderr.on('data', function(data) {
+			console.log('ERROR: ' + data);
+		});
+		outputLog.on('close', function(code) {
+			console.log('code: ' + code);
 		});
 	});
 
@@ -77,13 +84,17 @@ program
 			platform = 'mac';
 		}
 		
-		exec('npm run start-'+ platform, function(error, npmInitLog, npmError) {
-			
-			console.log(npmInitLog, npmError);
-			
-			if (error !== null) {
-				console.log('exec error: ' + error);
-			}
+		let outputLog = spawn('npm run start-'+ platform);
+		
+		outputLog.stdout.on('data', function(data) {
+			console.log(data);
+		});
+		
+		outputLog.stderr.on('data', function(data) {
+			console.log('ERROR: ' + data);
+		});
+		outputLog.on('close', function(code) {
+			console.log('code: ' + code);
 		});
 	});
 
@@ -91,13 +102,17 @@ program
 	.command('run-server')
 	.description('debug game server.')
 	.action(function () {
-		exec('npm run server', function(error, npmInitLog, npmError) {
-			
-			console.log(npmInitLog, npmError);
-			
-			if (error !== null) {
-				console.log('exec error: ' + error);
-			}
+		let outputLog = spawn('npm run server');
+		
+		outputLog.stdout.on('data', function(data) {
+			console.log(data);
+		});
+		
+		outputLog.stderr.on('data', function(data) {
+			console.log('ERROR: ' + data);
+		});
+		outputLog.on('close', function(code) {
+			console.log('code: ' + code);
 		});
 	});
 
@@ -117,16 +132,18 @@ program
 		distributingStr.setSpinnerString(18);
 		distributingStr.start();
 		
-		exec('npm run build-'+ platform, function(error, npmInitLog, npmError) {
-			
-			console.log(npmInitLog, npmError);
-			
-			if (error !== null) {
-				console.log('exec error: ' + error);
-				return;
-			}
-			
+		let outputLog = spawn('npm run build-'+ platform);
+		
+		outputLog.stdout.on('data', function(data) {
+			console.log(data);
+		});
+		
+		outputLog.stderr.on('data', function(data) {
+			console.log('ERROR: ' + data);
+		});
+		outputLog.on('close', function(code) {
 			distributingStr.stop();
+			console.log('code: ' + code);
 			console.log(' distribution finished!');
 		});
 	});
