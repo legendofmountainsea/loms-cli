@@ -7,7 +7,7 @@ const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
 program
-	.version('1.1.1')
+	.version('1.1.2')
 	.description('LOMS Development CLI');
 
 program
@@ -34,13 +34,16 @@ program
 			initloadingStr.setSpinnerString(18);
 			initloadingStr.start();
 			
-			let outputLog = spawn('npm i');
+			let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['i'],{
+				cwd: process.cwd(),
+				stdio: 'inherit',
+			});
 			
-			outputLog.stdout.on('data', function(data) {
+			outputLog.on('message', function(data) {
 				console.log(data);
 			});
 			
-			outputLog.stderr.on('data', function(data) {
+			outputLog.on('error', function(data) {
 				console.log('ERROR: ' + data);
 			});
 			outputLog.on('close', function(code) {
@@ -58,13 +61,16 @@ program
 	.command('run-dev')
 	.description('debug game with web.')
 	.action(function () {
-		let outputLog = spawn('npm run dev');
+		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','dev'],{
+			cwd: process.cwd(),
+			stdio: 'inherit',
+		});
 		
-		outputLog.stdout.on('data', function(data) {
+		outputLog.on('message', function(data) {
 			console.log(data);
 		});
 		
-		outputLog.stderr.on('data', function(data) {
+		outputLog.on('error', function(data) {
 			console.log('ERROR: ' + data);
 		});
 		outputLog.on('close', function(code) {
@@ -84,13 +90,16 @@ program
 			platform = 'mac';
 		}
 		
-		let outputLog = spawn('npm run start-'+ platform);
+		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','start-'+ platform],{
+			cwd: process.cwd(),
+			stdio: 'inherit',
+		});
 		
-		outputLog.stdout.on('data', function(data) {
+		outputLog.on('message', function(data) {
 			console.log(data);
 		});
 		
-		outputLog.stderr.on('data', function(data) {
+		outputLog.on('error', function(data) {
 			console.log('ERROR: ' + data);
 		});
 		outputLog.on('close', function(code) {
@@ -102,13 +111,16 @@ program
 	.command('run-server')
 	.description('debug game server.')
 	.action(function () {
-		let outputLog = spawn('npm run server');
+		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','server'],{
+			cwd: process.cwd(),
+			stdio: 'inherit',
+		});
 		
-		outputLog.stdout.on('data', function(data) {
+		outputLog.on('message', function(data) {
 			console.log(data);
 		});
 		
-		outputLog.stderr.on('data', function(data) {
+		outputLog.on('error', function(data) {
 			console.log('ERROR: ' + data);
 		});
 		outputLog.on('close', function(code) {
@@ -132,13 +144,16 @@ program
 		distributingStr.setSpinnerString(18);
 		distributingStr.start();
 		
-		let outputLog = spawn('npm run build-'+ platform);
+		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','build-'+platform],{
+			cwd: process.cwd(),
+			stdio: 'inherit',
+		});
 		
-		outputLog.stdout.on('data', function(data) {
+		outputLog.on('message', function(data) {
 			console.log(data);
 		});
 		
-		outputLog.stderr.on('data', function(data) {
+		outputLog.on('error', function(data) {
 			console.log('ERROR: ' + data);
 		});
 		outputLog.on('close', function(code) {
