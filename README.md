@@ -30,6 +30,11 @@ $ loms run-client
 $ loms run-server
 ```
 
+## Run unit tests
+```
+$ loms test
+```
+
 ## Requirement
 Node.js **version 9.2.0 or higher**
 
