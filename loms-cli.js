@@ -6,12 +6,9 @@ const download = require('download');
 const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
-const version = '1.1.3';
-
 program
-	.version(version)
+	.version(require('./package.json').version)
 	.option('-v, --version', 'output the version number')
-	.description('LOMS Development CLI')
 	.description('LOMS Development CLI')
 	.parse(process.argv);
 
