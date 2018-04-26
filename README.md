@@ -6,16 +6,8 @@ LOMS Development CLI
 ```
 $ npm install loms-cli -g
 ```
-Fork repository, create your branch from master and run CLI command-line at project's root directory
-```
-$ loms init
-```
-- Windows might get `node-gyp rebuild` error, open Powershell as admin and run
-```
-$ npm install -g windows-build-tools
-```
 
-## Getting started
+## Usage
 **Run game on web browser without NW.js Client**
 ```
 $ loms run-dev
@@ -25,12 +17,12 @@ $ loms run-dev
 $ loms run-client
 ```
 
-## Getting started Server
+**Run server**
 ```
 $ loms run-server
 ```
 
-## Run unit tests
+**Run unit tests**
 ```
 $ loms test
 ```
