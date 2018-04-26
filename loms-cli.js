@@ -23,9 +23,9 @@ program
 		let downloadURL = null;
 		
 		if(/^win/.test(process.platform)){
-			downloadURL = 'https://dl.nwjs.io/v0.27.0/nwjs-v0.27.0-win-x64.zip';
+			downloadURL = 'https://dl.nwjs.io/v0.30.1/nwjs-v0.30.1-win-x64.zip';
 		}else {
-			downloadURL = 'https://dl.nwjs.io/v0.27.0/nwjs-v0.27.0-osx-x64.zip';
+			downloadURL = 'https://dl.nwjs.io/v0.30.1/nwjs-v0.30.1-osx-x64.zip';
 		}
 		
 		download(downloadURL, path.join(process.cwd()),{ extract: true, headers: { accept: 'application/zip' } } ).then(() => {

@@ -28,7 +28,7 @@ $ loms test
 ```
 
 ## Requirement
-Node.js **version 9.2.0 or higher**
+Node.js **version 10.0.0 or higher**
 
 ## License
 GPL-2.0
