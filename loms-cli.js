@@ -1,192 +1,106 @@
 #!/usr/bin/env node
-const spawn = require('child_process').spawn;
-
 const program = require('commander');
 const download = require('download');
 const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
-program
-	.version(require('./package.json').version)
-	.option('-v, --version', 'output the version number')
-	.description('LOMS Development CLI')
-	.parse(process.argv);
+const childProcessRunNPM = require('./src/childProcessUtil').childProcessRunNPM;
+
+const dist = require('./src/distUtil').dist;
 
 program
-	.command('init')
-	.description('setup project.')
-	.action(function () {
-		const downloadingStr = new Spinner('download nwjs client to local %s');
-		downloadingStr.setSpinnerString(18);
-		downloadingStr.start();
-		
-		let downloadURL = null;
-		
-		if(/^win/.test(process.platform)){
-			downloadURL = 'https://dl.nwjs.io/v0.30.1/nwjs-v0.30.1-win-x64.zip';
-		}else {
-			downloadURL = 'https://dl.nwjs.io/v0.30.1/nwjs-v0.30.1-osx-x64.zip';
-		}
-		
-		download(downloadURL, path.join(process.cwd()),{ extract: true, headers: { accept: 'application/zip' } } ).then(() => {
-			downloadingStr.stop();
-			console.log(' download finished!');
-			
-			let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['i'],{
-				cwd: process.cwd(),
-				stdio: 'inherit',
-			});
-			
-			outputLog.on('message', function(data) {
-				process.stdout.clearLine();
-				process.stdout.cursorTo(0);
-				process.stdout.write(data);
-				// console.log(data);
-			});
-			
-			outputLog.on('error', function(data) {
-				console.log('ERROR: ' + data);
-			});
-			outputLog.on('close', function(code) {
-				console.log('code: ' + code);
-				console.log('install finished!');
-				console.log('Project is ready for development!');
-			});
-		}).catch(error => {
-			console.log('download error: ' + error);
-		});
-	});
+    .version(require('./package.json').version)
+    .option('-v, --version', 'output the version number')
+    .description('LOMS Development CLI')
+    .parse(process.argv);
 
 program
-	.command('run-dev')
-	.description('debug game with web.')
-	.action(function () {
-		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','dev'],{
-			cwd: process.cwd(),
-			stdio: 'inherit',
-		});
-		
-		outputLog.on('message', function(data) {
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(data);
-		});
-		
-		outputLog.on('error', function(data) {
-			console.log('ERROR: ' + data);
-		});
-		outputLog.on('close', function(code) {
-			console.log('code: ' + code);
-		});
-	});
+    .command('init')
+    .description('setup project.')
+    .action(() => {
+        const downloadingStr = new Spinner('download nwjs client to local %s');
+        downloadingStr.setSpinnerString(18);
+        downloadingStr.start();
+
+        const downloadPlatform = /^win/.test(process.platform) ? 'win' : 'osx';
+
+        const downloadURL = `https://dl.nwjs.io/v0.30.1/nwjs-v0.30.1-${downloadPlatform}-x64.zip`;
+
+        download(downloadURL, path.join(process.cwd()), {
+            extract: true,
+            headers: {accept: 'application/zip'}
+        }).then(() => {
+            downloadingStr.stop();
+            console.log('Download finished!');
+
+            childProcessRunNPM(['i'], process.cwd()).then((code) => {
+                console.log(`Code: ${code}`);
+                console.log('Install finished!');
+                console.log('Project is ready for development!');
+            }).catch(e => {
+                console.log(`ERROR: ${e}`);
+            });
+
+        }).catch(error => {
+            console.log('download error: ' + error);
+        });
+    });
 
 program
-	.command('run-client')
-	.description('debug game with nwjs client.')
-	.action(function () {
-		let platform = null;
-		
-		if(/^win/.test(process.platform)){
-			platform = 'win';
-		}else {
-			platform = 'mac';
-		}
-		
-		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','start-'+ platform],{
-			cwd: process.cwd(),
-			stdio: 'inherit',
-		});
-		
-		outputLog.on('message', function(data) {
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(data);
-		});
-		
-		outputLog.on('error', function(data) {
-			console.log('ERROR: ' + data);
-		});
-		outputLog.on('close', function(code) {
-			console.log('code: ' + code);
-		});
-	});
+    .command('run-dev')
+    .description('debug game with web.')
+    .action(() => {
+        childProcessRunNPM(['run', 'dev'], process.cwd()).then((code) => {
+            console.log(`Code: ${code}`);
+        }).catch(e => {
+            console.log(`ERROR: ${e}`);
+        });
+    });
 
 program
-	.command('run-server')
-	.description('debug game server.')
-	.action(function () {
-		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','server'],{
-			cwd: process.cwd(),
-			stdio: 'inherit',
-		});
-		
-		outputLog.on('message', function(data) {
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(data);
-		});
-		
-		outputLog.on('error', function(data) {
-			console.log('ERROR: ' + data);
-		});
-		outputLog.on('close', function(code) {
-			console.log('code: ' + code);
-		});
-	});
+    .command('run-client')
+    .description('debug game with nwjs client.')
+    .action(() => {
+        const platform = /^win/.test(process.platform) ? 'win' : 'mac';
+
+        childProcessRunNPM(['run', `start-${platform}`], process.cwd()).then((code) => {
+            console.log(`Code: ${code}`);
+        }).catch(e => {
+            console.log(`ERROR: ${e}`);
+        });
+    });
 
 program
-	.command('test')
-	.description('run game unit tests.')
-	.action(function () {
-		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['test'],{
-			cwd: process.cwd(),
-			stdio: 'inherit',
-		});
-		
-		outputLog.on('message', function(data) {
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(data);
-		});
-		
-		outputLog.on('error', function(data) {
-			console.log('ERROR: ' + data);
-		});
-		outputLog.on('close', function(code) {
-			console.log('code: ' + code);
-		});
-	});
+    .command('run-server')
+    .description('debug game server.')
+    .action(() => {
+        childProcessRunNPM(['run', 'server'], process.cwd()).then((code) => {
+            console.log(`Code: ${code}`);
+        }).catch(e => {
+            console.log(`ERROR: ${e}`);
+        });
+    });
 
 program
-	.command('dist')
-	.description('distribute game.')
-	.action(function () {
-		let platform = null;
-		
-		if(/^win/.test(process.platform)){
-			platform = 'win';
-		}else {
-			platform = 'mac';
-		}
-		
-		let outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm",['run','build-'+platform],{
-			cwd: process.cwd(),
-			stdio: 'inherit',
-		});
-		
-		outputLog.on('message', function(data) {
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(data);
-		});
-		
-		outputLog.on('error', function(data) {
-			console.log('ERROR: ' + data);
-		});
-		outputLog.on('close', function(code) {
-			console.log('code: ' + code);
-			console.log(' distribution finished!');
-		});
-	});
+    .command('test')
+    .description('run game unit tests.')
+    .action(() => {
+        childProcessRunNPM(['test'], process.cwd()).then((code) => {
+            console.log(`Code: ${code}`);
+        }).catch(e => {
+            console.log(`ERROR: ${e}`);
+        });
+    });
+
+program
+    .command('dist')
+    .description('distribute game.')
+    .action(() => {
+        childProcessRunNPM(['run', 'build-prod'], process.cwd()).then(() => {
+            dist();
+        }).catch(e => {
+            console.log(`ERROR: ${e}`);
+        });
+    });
 
 program.parse(process.argv);
