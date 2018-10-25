@@ -58,7 +58,7 @@ function packageSourceToNWClient(distPath) {
 function distUtil() {
     console.log('Building...');
 
-    const distPath = path.join(process.cwd(), 'distUtil', 'loms');
+    const distPath = path.join(process.cwd(), 'dist', 'loms');
     const nwCilentPath = path.join(process.cwd(), nwClientFolderName, nwClientName);
 
     if (!fsExtra.pathExistsSync(nwCilentPath)) {
