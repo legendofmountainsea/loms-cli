@@ -16,9 +16,7 @@ function deleteDevDependency(dest) {
     console.log('Deleting development dependency');
 
     childProcessRunNPM(['prune', '--production'], dest).then((code)=>{
-        console.log(`Deleting development dependency finished,
-        Build finished!
-        Code: ${code}`);
+        console.log(`Deleting development dependency finished, Code: ${code}`);
     }).catch(e => {
         console.log(`ERROR: ${e}`);
     });
@@ -27,8 +25,8 @@ function deleteDevDependency(dest) {
 function packageSourceToNWClient(distPath) {
 
     const rootPath = process.cwd();
-    const folders = ['src', 'assets', 'node_modules'],
-        files = ['LOMS.png','index.html', 'loms.game.js', 'package.json'];
+    const folders = ['src', 'assets', 'nwSystem' , 'node_modules'],
+        files = ['index.html', 'loms.game.js', 'package.json'];
 
     let dest = null;
 
@@ -55,8 +53,12 @@ function packageSourceToNWClient(distPath) {
     deleteDevDependency(dest);
 }
 
+function addGameInfoInNWClient(){
+    console.log('Building release version finished!')
+}
+
 function distUtil() {
-    console.log('Building...');
+    console.log('Building release version begin ...');
 
     const distPath = path.join(process.cwd(), 'dist', 'loms');
     const nwCilentPath = path.join(process.cwd(), nwClientFolderName, nwClientName);
@@ -68,6 +70,7 @@ function distUtil() {
 
     copyNWClientToDistFolder(nwCilentPath, distPath);
     packageSourceToNWClient(distPath);
+    addGameInfoInNWClient();
 }
 
 exports.dist = distUtil;

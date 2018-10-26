@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 const program = require('commander');
-const download = require('download');
-const path = require('path');
 const Spinner = require('cli-spinner').Spinner;
 
+const downloadClientAndSDK = require('./src/clientDownloadUtil').downloadClientAndSDK;
 const childProcessRunNPM = require('./src/childProcessUtil').childProcessRunNPM;
-
 const dist = require('./src/distUtil').dist;
 
 program
@@ -22,14 +20,7 @@ program
         downloadingStr.setSpinnerString(18);
         downloadingStr.start();
 
-        const downloadPlatform = /^win/.test(process.platform) ? 'win' : 'osx';
-
-        const downloadURL = `https://dl.nwjs.io/v0.30.1/nwjs-v0.30.1-${downloadPlatform}-x64.zip`;
-
-        download(downloadURL, path.join(process.cwd()), {
-            extract: true,
-            headers: {accept: 'application/zip'}
-        }).then(() => {
+        downloadClientAndSDK().then(()=>{
             downloadingStr.stop();
             console.log('Download finished!');
 
@@ -41,8 +32,8 @@ program
                 console.log(`ERROR: ${e}`);
             });
 
-        }).catch(error => {
-            console.log('download error: ' + error);
+        }).catch(e => {
+            console.log(`Download error: ${e}`);
         });
     });
 
