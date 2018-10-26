@@ -87,8 +87,8 @@ program
     .command('dist')
     .description('distribute game.')
     .action(() => {
-        childProcessRunNPM(['run', 'build-prod'], process.cwd()).then(() => {
-            dist();
+        childProcessRunNPM(['run', 'build-prod'], process.cwd()).then(async () => {
+            await dist();
         }).catch(e => {
             console.log(`ERROR: ${e}`);
         });

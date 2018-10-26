@@ -1,9 +1,14 @@
 const fsExtra = require('fs-extra');
 const path = require('path');
 
+const plist = require('plist');
+
+const enLprojPlistString = require('./en.lproj.infoPlistString').content;
+
 const childProcessRunNPM = require('./childProcessUtil').childProcessRunNPM;
 
 const nwClientName = /^win/.test(process.platform) ? 'nw.exe' : 'nwjs.app';
+const lomsClientName = /^win/.test(process.platform) ? 'LOMS.exe' : 'LOMS.app';
 const nwClientFolderName = 'nwjs-v0.30.1-osx-x64';
 
 function copyNWClientToDistFolder(nwCilentPath, distPath) {
@@ -13,16 +18,19 @@ function copyNWClientToDistFolder(nwCilentPath, distPath) {
 }
 
 function deleteDevDependency(dest) {
-    console.log('Deleting development dependency');
+    return new Promise((resolve, reject) => {
+        console.log('Deleting development dependency');
 
-    childProcessRunNPM(['prune', '--production'], dest).then((code)=>{
-        console.log(`Deleting development dependency finished, Code: ${code}`);
-    }).catch(e => {
-        console.log(`ERROR: ${e}`);
+        childProcessRunNPM(['prune', '--production'], dest).then((code)=>{
+            console.log(`Deleting development dependency finished, Code: ${code}`);
+            return resolve();
+        }).catch(e => {
+            return reject(e);
+        });
     });
 }
 
-function packageSourceToNWClient(distPath) {
+async function packageSourceToNWClient(distPath) {
 
     const rootPath = process.cwd();
     const folders = ['src', 'assets', 'nwSystem' , 'node_modules'],
@@ -31,7 +39,8 @@ function packageSourceToNWClient(distPath) {
     let dest = null;
 
     if (/^win/.test(process.platform)) {
-        dest = distPath;
+        dest = path.join(distPath, 'package.nw');
+        fsExtra.ensureDirSync(dest);
     } else {
         dest = path.join(distPath, nwClientName, 'Contents', 'Resources', 'app.nw');
         fsExtra.ensureDirSync(dest);
@@ -50,14 +59,56 @@ function packageSourceToNWClient(distPath) {
         fsExtra.copySync(srcPath, destPath);
     });
 
-    deleteDevDependency(dest);
+    await deleteDevDependency(dest);
 }
 
-function addGameInfoInNWClient(){
-    console.log('Building release version finished!')
+async function readPlist(path) {
+
+    return new Promise((resolve, reject) => {
+        fsExtra.readFile(path, {
+            encoding: 'utf-8',
+        }).then((data)=>{
+            return resolve(plist.parse(data));
+        }).catch(e => {
+            return reject(e);
+        });
+    });
 }
 
-function distUtil() {
+async function writePlist(path, content) {
+    return await fsExtra.writeFile(path, plist.build(content));
+}
+
+async function addGameInfoInNWClient(distPath){
+
+    const rootPath = process.cwd();
+    const version = fsExtra.readJsonSync(path.join(rootPath,'package.json')).version;
+
+    let dest = null;
+
+    if (/^win/.test(process.platform)) {
+        //TODO https://github.com/SkyHarp/loms-cli/issues/1
+    } else {
+        dest = path.join(distPath, nwClientName, 'Contents');
+        const plistPath = path.join(dest,'info.plist');
+
+        const plistContent = await readPlist(plistPath);
+        plistContent.CFBundleIdentifier = 'io.skyharp.loms';
+        plistContent.CFBundleName = 'LegendOfMountainSea';
+        plistContent.CFBundleDisplayName = 'LegendOfMountainSea';
+        plistContent.CFBundleIconFile = 'app.nw/assets/LOMS.icns';
+        plistContent.CFBundleShortVersionString = version;
+
+        await writePlist(plistPath, plistContent);
+        await fsExtra.writeFile(path.join(dest,'Resources','en.lproj','InfoPlist.strings'),enLprojPlistString);
+    }
+
+    fsExtra.rename(path.join(distPath,nwClientName),path.join(distPath,lomsClientName));
+
+    console.log('Building release version finished!');
+}
+
+async function distUtil() {
     console.log('Building release version begin ...');
 
     const distPath = path.join(process.cwd(), 'dist', 'loms');
@@ -69,8 +120,14 @@ function distUtil() {
     }
 
     copyNWClientToDistFolder(nwCilentPath, distPath);
-    packageSourceToNWClient(distPath);
-    addGameInfoInNWClient();
+
+    try{
+        await packageSourceToNWClient(distPath);
+        await addGameInfoInNWClient(distPath);
+    } catch (e) {
+        console.log(`Package source failed: ${e}`);
+    }
+
 }
 
 exports.dist = distUtil;
