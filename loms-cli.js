@@ -5,6 +5,7 @@ const Spinner = require('cli-spinner').Spinner;
 const downloadClientAndSDK = require('./src/clientDownloadUtil').downloadClientAndSDK;
 const childProcessRunNPM = require('./src/childProcessUtil').childProcessRunNPM;
 const dist = require('./src/distUtil').dist;
+const rebuildNW = require('./src/rebuildUtil').rebuildNW;
 
 program
     .version(require('./package.json').version)
@@ -24,12 +25,17 @@ program
             downloadingStr.stop();
             console.log('Download finished!');
 
-            childProcessRunNPM(['i'], process.cwd()).then((code) => {
-                console.log(`Code: ${code}`);
-                console.log('Install finished!');
-                console.log('Project is ready for development!');
+            childProcessRunNPM(['i'], process.cwd()).then(() => {
+
+                rebuildNW().then(()=>{
+                    console.log('Install finished!');
+                    console.log('Project is ready for development!');
+                }).catch(e => {
+                    console.log(`Build native module error: ${e}`);
+                });
+
             }).catch(e => {
-                console.log(`ERROR: ${e}`);
+                console.log(`Download error: ${e}`);
             });
 
         }).catch(e => {
@@ -91,6 +97,17 @@ program
             await dist();
         }).catch(e => {
             console.log(`ERROR: ${e}`);
+        });
+    });
+
+program
+    .command('rebuild')
+    .description('rebuild nw native module.')
+    .action(()=>{
+        rebuildNW().then(()=>{
+            console.log(`Rebuild native module finished!`);
+        }).catch(e => {
+            console.log(`Error: ${e}`);
         });
     });
 
