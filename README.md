@@ -1,6 +1,6 @@
 # loms-cli
 LOMS Development CLI
-![icon](https://raw.githubusercontent.com/SkyHarp/LegendOfMountainSea/master/LOMS.png)
+![icon](https://raw.githubusercontent.com/SkyHarp/LegendOfMountainSea/master/assets/LOMS.png)
 
 ## Installing
 ```
