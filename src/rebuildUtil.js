@@ -4,7 +4,7 @@ const path = require('path');
 function runNWGYP(cwd, cmd) {
     return new Promise((resolve, reject) => {
 
-        const outputLog = spawn("nw-gyp", cmd, {
+        const outputLog = spawn(/^win/.test(process.platform) ? "nw-gyp.cmd" : "nw-gyp", cmd, {
             cwd: cwd,
             stdio: 'inherit',
         });
