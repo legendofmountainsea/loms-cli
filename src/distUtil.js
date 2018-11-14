@@ -2,6 +2,7 @@ const fsExtra = require('fs-extra');
 const path = require('path');
 
 const plist = require('plist');
+const rcedit = require('rcedit');
 
 const enLprojPlistString = require('./en.lproj.infoPlistString').content;
 
@@ -79,6 +80,18 @@ async function writePlist(path, content) {
     return await fsExtra.writeFile(path, plist.build(content));
 }
 
+async function writeResourceInfo(path, resources) {
+    return new Promise((resolve, reject) => {
+        rcedit(path, resources, (err) => {
+            if(err){
+                return reject(`Could not change the resource info, warring:${err}`);
+            }
+
+            return resolve();
+        });
+    });
+}
+
 async function addGameInfoInNWClient(distPath){
 
     const rootPath = process.cwd();
@@ -87,7 +100,19 @@ async function addGameInfoInNWClient(distPath){
     let dest = null;
 
     if (/^win/.test(process.platform)) {
-        //TODO https://github.com/SkyHarp/loms-cli/issues/1
+        const resources = {
+            'product-version': version,
+            'file-version': version,
+            'version-string': {
+                ProductName: 'LegendOfMountainSea',
+                CompanyName: 'SkyHarp',
+                FileDescription: 'LOMS Client Bootstrapper',
+                LegalCopyright: 'GPL-2.0',
+            },
+            'icon': path.join(distPath, 'package.nw', 'assets', 'LOMS.ico'),
+        };
+
+        await writeResourceInfo(path.join(distPath, nwClientName), resources);
     } else {
         dest = path.join(distPath, nwClientName, 'Contents');
         const plistPath = path.join(dest,'info.plist');

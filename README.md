@@ -6,7 +6,10 @@ LOMS Development CLI
 ```
 $ npm install loms-cli -g
 ```
-
+- For Windows platform, please make sure you had installed windows-build-tools first
+```
+$  npm i -g --prodution --vs2015 --add-python-to-path windows-build-tools
+``` 
 ## Usage
 **Run game on web browser without NW.js Client**
 ```
@@ -25,6 +28,11 @@ $ loms run-server
 **Run unit tests**
 ```
 $ loms test
+```
+
+**Run release build process**
+```
+$ loms dist
 ```
 
 ## Requirement
