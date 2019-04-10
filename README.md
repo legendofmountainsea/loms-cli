@@ -1,4 +1,7 @@
 # loms-cli
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/SkyHarp/loms-cli.svg)](https://greenkeeper.io/)
+
 LOMS Development CLI
 ![icon](https://raw.githubusercontent.com/SkyHarp/LegendOfMountainSea/master/assets/LOMS.png)
 
