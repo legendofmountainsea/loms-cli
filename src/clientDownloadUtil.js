@@ -1,6 +1,8 @@
 const download = require('download');
 const path = require('path');
 
+const fsExtra = require('fs-extra');
+
 function downloadClientAndSDK(){
 
     return new Promise((resolve, reject) => {
@@ -13,6 +15,10 @@ function downloadClientAndSDK(){
 
         const clientDownloadURL = `${downloadURL}${clientName}.zip`,
             sdkDownloadURL = `${downloadURL}${sdkName}.zip`;
+
+	    if(fsExtra.existsSync(path.join(process.cwd(),clientName) )&& fsExtra.existsSync(path.join(process.cwd(),sdkName))){
+		    return resolve();
+	    }
 
         Promise.all([
             clientDownloadURL,
