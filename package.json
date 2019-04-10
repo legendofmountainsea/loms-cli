@@ -26,7 +26,7 @@
   "dependencies": {
     "cli-spinner": "^0.2.7",
     "commander": "^2.13.0",
-    "download": "^6.2.5",
+    "download": "^7.1.0",
     "fs-extra": "^7.0.0",
     "nw-gyp": "^3.6.3",
     "plist": "^3.0.1",
