@@ -104,11 +104,12 @@ program
     .command('rebuild')
     .description('rebuild nw native module.')
     .action(()=>{
-        rebuildNW().then(()=>{
-            console.log(`Rebuild native module finished!`);
-        }).catch(e => {
-            console.log(`Error: ${e}`);
-        });
+	    console.log(`No native module needs rebuild!`);
+        // rebuildNW().then(()=>{
+        //     console.log(`Rebuild native module finished!`);
+        // }).catch(e => {
+        //     console.log(`Error: ${e}`);
+        // });
     });
 
 program.parse(process.argv);

@@ -2,6 +2,7 @@ const download = require('download');
 const path = require('path');
 
 const fsExtra = require('fs-extra');
+const nwjsVersion = 'v0.41.3';
 
 function downloadClientAndSDK() {
 
@@ -19,11 +20,11 @@ function downloadClientAndSDK() {
 				break;
 		}
 
-		const clientName = `nwjs-v0.30.1-${downloadPlatform}-x64`,
-			sdkName = `nwjs-sdk-v0.30.1-${downloadPlatform}-x64`,
+		const clientName = `nwjs-${nwjsVersion}-${downloadPlatform}-x64`,
+			sdkName = `nwjs-sdk-${nwjsVersion}-${downloadPlatform}-x64`,
 			fileName = /^linux/.test(downloadPlatform) ? 'tar.gz' : 'zip';
 
-		const downloadURL = `https://dl.nwjs.io/v0.30.1/`;
+		const downloadURL = `https://dl.nwjs.io/${nwjsVersion}/`;
 
 		const clientDownloadURL = `${downloadURL}${clientName}.${fileName}`,
 			sdkDownloadURL = `${downloadURL}${sdkName}.${fileName}`;
