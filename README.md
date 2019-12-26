@@ -36,7 +36,7 @@ $ loms dist
 ```
 
 ## Requirement
-Node.js **version 10.0.0 or higher**
+Node.js **version 12.0.0 or higher**
 
 ## License
 GPL-2.0
