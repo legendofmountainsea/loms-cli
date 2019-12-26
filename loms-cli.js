@@ -58,7 +58,18 @@ program
     .command('run-client')
     .description('debug game with nwjs client.')
     .action(() => {
-        const platform = /^win/.test(process.platform) ? 'win' : 'mac';
+        const platform = null;
+        switch (process.platform) {
+            case 'win32':
+                platform = 'win';
+                break;
+            case 'linux':
+                platform = 'linux';
+                break;
+            default:
+                platform = 'osx';
+                break;
+        }
 
         childProcessRunNPM(['run', `start-${platform}`], process.cwd()).then((code) => {
             console.log(`Code: ${code}`);
