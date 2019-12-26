@@ -8,9 +8,11 @@ const enLprojPlistString = require('./en.lproj.infoPlistString').content;
 
 const childProcessRunNPM = require('./childProcessUtil').childProcessRunNPM;
 
+const nwjsVersion = 'v0.41.3';
+
 const nwClientName = /^win/.test(process.platform) ? 'nw.exe' : 'nwjs.app';
 const lomsClientName = /^win/.test(process.platform) ? 'LOMS.exe' : 'LOMS.app';
-const nwClientFolderName = /^win/.test(process.platform) ?  'nwjs-v0.30.1-win-x64' : 'nwjs-v0.30.1-osx-x64';
+const nwClientFolderName = /^win/.test(process.platform) ?  `nwjs-${nwjsVersion}-win-x64` : `nwjs-${nwjsVersion}-osx-x64`;
 
 function copyNWClientToDistFolder(nwCilentPath, distPath) {
 
